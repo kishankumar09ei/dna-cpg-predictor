@@ -29,6 +29,19 @@ def preprocess_sequence(dna_seq: str, max_len=128):
     length = torch.tensor([len(seq_int)])  # Store original length
     
     return seq_tensor, length
+##function to get true value
+def count_cpgs(seq: str) -> int:
+    """This function counts occurrences of the CpG motif (CG) in a given DNA sequence (seq).
+        The sequence is assumed to be a string, not a list of integers.
+        
+        The function iterates over the sequence and checks every adjacent pair of nucleotides."""
+    cgs = 0
+    for i in range(0, len(seq) - 1):
+        dimer = seq[i:i+2]
+        # note that seq is a string, not a list
+        if dimer == "CG":
+            cgs += 1
+    return cgs
 
 # Function to predict CpG sites
 def predict_cpg_count(dna_seq: str):
@@ -50,4 +63,5 @@ if st.button("Predict"):
         new_var = st.warning("Please enter a valid DNA sequence.")
     else:
         prediction = predict_cpg_count(dna_input)
+        st.success(f"Actual CpG Count: **{count_cpgs(dna_input)}**")
         st.success(f"Predicted CpG Count: **{prediction:.2f}**")
